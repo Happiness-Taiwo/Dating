@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Believers - Find Your Match Made in Heaven</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #4A90E2;
+        }
+
+        .cta-button {
+            background: #4A90E2;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            margin-top: 80px;
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(74, 144, 226, 0.3);
+            z-index: -1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f4ff, #e8f4fd);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 1rem;
+        }
+
+        .step-image {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 20px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+        }
+
+        /* Success Stories */
+        .success-stories {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f4ff, #e8f4fd);
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .story-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .story-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .story-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Blog Section */
+        .blog {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .blog-card {
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 20px;
+            overflow: hidden;
+            color: white;
+            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .blog-content {
+            padding: 2rem;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            width: 100%;
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f4ff, #e8f4fd);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .about-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 20px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 6rem;
+        }
+
+        /* Scripture Quote Section */
+        .scripture-quote {
+            background: linear-gradient(135deg, #e8d5f2, #f0e6ff);
+            padding: 80px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .heart-icon {
+            width: 60px;
+            height: 60px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .scripture-quote h2 {
+            font-size: 2.2rem;
+            color: #4a4a4a;
+            font-weight: 400;
+            line-height: 1.4;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+        }
+
+        .verse-reference {
+            color: #888;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* Newsletter Signup */
+        .newsletter-signup {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            padding: 60px 0;
+            color: white;
+        }
+
+        .newsletter-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+        }
+
+        .newsletter-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .newsletter-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .signup-form {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .email-input {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            width: 300px;
+            outline: none;
+        }
+
+        .signup-button {
+            background: white;
+            color: #6c5ce7;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Final CTA */
+        .final-cta {
+            background: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .final-cta p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* Main Footer */
+        .main-footer {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            padding: 40px 0;
+            color: white;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Mobile Video Optimization */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+
+            .video-background {
+                /* Ensure video scales properly on mobile */
+                min-width: 100%;
+                min-height: 100%;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .step-image {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+
+            .scripture-quote h2 {
+                font-size: 1.8rem;
+            }
+
+            .newsletter-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 2rem;
+            }
+
+            .signup-form {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .email-input {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .footer-links {
+                gap: 1rem;
+            }
+
+            .footer-links a {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-scroll {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Statistics */
+        .stats {
+            background: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <i class="fas fa-heart"></i>
+                Believers
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#" class="cta-button">Join Now</a>
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <!-- Video Background -->
+        <video autoplay muted loop playsinline class="video-background">
+            <source src="/Users/happiness/Documents/Dating Site/background-video.mp4" type="video/mp4" />
+            <!-- Fallback for browsers that don't support video -->
+        </video>
+        
+        <div class="container">
+            <div class="hero-content">
+                <h1>Meet Believers and Find your Match Made in Heaven</h1>
+                <p>Connect with faith-focused singles who share your values and beliefs</p>
+                <a href="#" class="cta-button" style="font-size: 1.2rem; padding: 15px 30px;">Get Started Free</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">360°</div>
+                    <div class="stat-label">Complete Profile Matching</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Active Members</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support Available</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Believers Choose Us</h2>
+            <p class="section-subtitle">Discover the features that make finding your perfect match easier and more meaningful</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Faith-First Matching</h3>
+                    <p>Our advanced algorithm connects you with people who share your faith, values, and life goals for meaningful relationships.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safe Community</h3>
+                    <p>Every profile is verified and our community guidelines ensure a respectful, secure environment for all members.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3>God-Centered Approach</h3>
+                    <p>Built specifically for believers seeking relationships rooted in faith, prayer, and shared spiritual journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="about">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Start your journey to finding love in three simple steps</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <div class="step-image">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Create A Profile</h3>
+                    <p>Share your faith journey, values, and what you're looking for in a partner. Our detailed profiles help you connect authentically.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <div class="step-image">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3>Browse Profiles</h3>
+                    <p>Discover profiles of like-minded believers in your area. Use our advanced filters to find exactly what you're looking for.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <div class="step-image">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Start Communicating</h3>
+                    <p>Connect through messages, video calls, and virtual dates. Build meaningful relationships in a safe, faith-centered environment.</p>
+                    <div style="margin-top: 2rem;">
+                        <a href="#" class="cta-button">Join Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories -->
+    <section class="success-stories">
+        <div class="container">
+            <h2 class="section-title">Love Stories Written by God</h2>
+            <p class="section-subtitle">Real couples who found their perfect match through our platform</p>
+            
+            <div class="stories-grid">
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">M&J</div>
+                        <div>
+                            <h4>Michael & Jennifer</h4>
+                            <small>Married 2 years ago</small>
+                        </div>
+                    </div>
+                    <p>"We both were looking for someone who shared our faith and values. Believers helped us find each other, and now we're building a beautiful life together centered on God."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">D&S</div>
+                        <div>
+                            <h4>David & Sarah</h4>
+                            <small>Engaged last month</small>
+                        </div>
+                    </div>
+                    <p>"From our first conversation about scripture to our engagement, every step has been blessed. We're grateful for a platform that truly understands faith-based relationships."</p>
+                </div>
+                <div class="story-card">
+                    <div class="story-header">
+                        <div class="story-avatar">R&M</div>
+                        <div>
+                            <h4>Robert & Maria</h4>
+                            <small>Dating 1 year</small>
+                        </div>
+                    </div>
+                    <p>"We connected over our shared mission work and haven't looked back. It's amazing to find someone who not only loves God but encourages your spiritual growth."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog" id="blog">
+        <div class="container">
+            <h2 class="section-title">Relationship Blogs</h2>
+            <p class="section-subtitle">Guidance and inspiration for your dating journey</p>
+            
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <div class="blog-content">
+                        <h3>5 Tips to Start Dating Successfully</h3>
+                        <p>Essential advice for beginning your faith-based dating journey with confidence and purpose.</p>
+                        <small>Read More →</small>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-content">
+                        <h3>Navigating First Date Conversations</h3>
+                        <p>How to have meaningful conversations that honor your faith and build genuine connections.</p>
+                        <small>Read More →</small>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-content">
+                        <h3>Long Distance Dating</h3>
+                        <p>Maintaining strong, faith-centered relationships across the miles with practical tips and encouragement.</p>
+                        <small>Read More →</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="cta-button">View More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Us</h2>
+                    <p>Believers is more than just a dating platform - we're a community of faith-focused individuals seeking meaningful relationships rooted in shared values and beliefs.</p>
+                    <p>Our mission is to help Christian singles find their God-appointed partner through a safe, respectful, and nurturing online environment. Every feature we build is designed with faith at the center.</p>
+                    <p>Join thousands of believers who have found love, friendship, and spiritual growth through our platform.</p>
+                    <div style="margin-top: 2rem;">
+                        <a href="#" class="cta-button">Learn More</a>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripture Quote Section -->
+    <section class="scripture-quote">
+        <div class="container">
+            <div class="heart-icon">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2>And now these three remain: faith, hope and love. But the greatest of these is love.</h2>
+            <p class="verse-reference">1 Corinthians 13:13</p>
+        </div>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="newsletter-signup">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Want to receive weekly relationship tips?</h3>
+                    <p>Join over 1 million subscribers now</p>
+                </div>
+                <div class="newsletter-form">
+                    <form class="signup-form">
+                        <input type="email" placeholder="Your email..." class="email-input">
+                        <button type="submit" class="signup-button">Sign Up For Free</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Meet Someone Who Shares Your Values?</h2>
+            <p>Join thousands of singles pursuing love God's way</p>
+            <a href="#" class="cta-button" style="font-size: 1.1rem; margin-top: 1rem;">Get started - It's free</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#">About us</a>
+                    <a href="#">Our mission</a>
+                    <a href="#">Success stories</a>
+                    <a href="#">Dating tips</a>
+                    <a href="#">Safety guidelines</a>
+                    <a href="#">Help</a>
+                    <a href="#">Contact us</a>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-on-scroll');
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards and other elements
+        document.querySelectorAll('.feature-card, .step, .story-card, .blog-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.feature-card, .story-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Counter animation for statistics
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = counter.textContent;
+                const numericTarget = parseInt(target.replace(/\D/g, ''));
+                const suffix = target.replace(/[\d,]/g, '');
+                
+                if (numericTarget) {
+                    let current = 0;
+                    const increment = numericTarget / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= numericTarget) {
+                            counter.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current) + suffix;
+                        }
+                    }, 30);
+                }
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        // Handle newsletter signup
+        document.querySelector('.signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.querySelector('.email-input').value;
+            if (email) {
+                alert('Thank you for subscribing! You\'ll receive weekly relationship tips in your inbox.');
+                document.querySelector('.email-input').value = '';
+            }
+        });
+
+        // Add newsletter input focus effects
+        const emailInput = document.querySelector('.email-input');
+        emailInput.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+            this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+        });
+
+        emailInput.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>

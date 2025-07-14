@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Believers - Christian Dating Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f8f4ff, #e8f4fd);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4A90E2;
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: #8E44AD;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-item {
+            color: #666;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s;
+            position: relative;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #4A90E2;
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 200px;
+            padding: 0.5rem 0;
+            display: none;
+            z-index: 100;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            color: #666;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(74, 144, 226, 0.1);
+            color: #4A90E2;
+        }
+
+        .dropdown-item i {
+            margin-right: 0.5rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #eee;
+            margin: 0.5rem 0;
+        }
+
+        /* Main Layout */
+        .main-container {
+            margin-top: 80px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Profile Suggestions */
+        .profile-suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .profile-image {
+            height: 200px;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-info {
+            padding: 1.25rem;
+        }
+
+        .profile-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .profile-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(74, 144, 226, 0.1);
+            color: #4A90E2;
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .btn-like {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-message {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .btn-like:hover {
+            background: #ff5252;
+        }
+
+        .btn-message:hover {
+            background: #357ABD;
+        }
+
+        /* Search and Filter Section */
+        .search-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #4A90E2;
+        }
+
+        .search-btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background: #357ABD;
+        }
+
+        .filter-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        .filter-select:focus {
+            border-color: #4A90E2;
+        }
+
+        /* Messages Section */
+        .messages-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            height: 600px;
+            display: flex;
+        }
+
+        .message-list {
+            width: 350px;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        .message-item {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .message-item:hover {
+            background: #f8f9fa;
+        }
+
+        .message-item.active {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .message-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .message-preview {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .message-name {
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: #333;
+        }
+
+        .message-text {
+            color: #666;
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .message-time {
+            color: #999;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: #f9f9f9;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 15px;
+            position: relative;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .message-sent {
+            background: #4A90E2;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-received {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time-stamp {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+
+        .message-received .message-time-stamp {
+            color: rgba(0,0,0,0.5);
+        }
+
+        .message-input-area {
+            padding: 1rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            background: white;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s;
+            font-size: 0.95rem;
+            resize: none;
+            height: 50px;
+            line-height: 1.5;
+        }
+
+        .message-input:focus {
+            border-color: #4A90E2;
+        }
+
+        .send-btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            background: #357ABD;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            position: relative;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            color: #4A90E2;
+            font-weight: 600;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #4A90E2;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-suggestions {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                grid-template-columns: 1fr;
+            }
+
+            .messages-container {
+                height: 500px;
+            }
+
+            .message-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .chat-area {
+                display: none;
+            }
+
+            .message-list.mobile-hidden {
+                display: none;
+            }
+
+            .chat-area.mobile-show {
+                display: flex;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Statistics */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4A90E2;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Match percentage */
+        .match-percentage {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        /* Online status */
+        .online-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            background: #4CAF50;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Profile Tab */
+        .profile-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .profile-info-large {
+            flex: 1;
+        }
+
+        .profile-name-large {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .profile-details-large {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .profile-bio {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-actions-large {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            background: #357ABD;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #4A90E2;
+            border: 2px solid #4A90E2;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4A90E2;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: #8E44AD;
+        }
+
+        .faith-details {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .faith-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .faith-detail {
+            margin-bottom: 1rem;
+        }
+
+        .faith-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .faith-value {
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            height: 150px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 2rem;
+            transition: transform 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        .add-photo {
+            border: 2px dashed #ccc;
+            cursor: pointer;
+        }
+
+        .add-photo:hover {
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        /* Daily Devotional */
+        .devotional-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #f9f4ff, #f0f7ff);
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .devotional-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .devotional-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #4A90E2;
+        }
+
+        .devotional-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .devotional-verse {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .devotional-text {
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .devotional-prayer {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            font-style: italic;
+            color: #555;
+            border-left: 3px solid #4A90E2;
+        }
+
+        /* Events Section */
+        .events-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .event-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .event-date {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4A90E2, #8E44AD);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .event-day {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .event-month {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .event-details {
+            flex: 1;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #333;
+        }
+
+        .event-time {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .event-description {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Prayer Requests */
+        .prayer-requests {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .prayer-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .prayer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prayer-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .prayer-time {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .prayer-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .prayer-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .prayer-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.3s;
+        }
+
+        .prayer-btn:hover {
+            color: #4A90E2;
+        }
+
+        .prayer-btn i {
+            font-size: 1rem;
+        }
+
+        /* Settings Section */
+        .settings-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .settings-section {
+            margin-bottom: 2rem;
+        }
+
+        .settings-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .settings-title i {
+            color: #8E44AD;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4A90E2;
+            outline: none;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .form-select:focus {
+            border-color: #4A90E2;
+            outline: none;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-check-label {
+            color: #555;
+        }
+
+        .settings-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-save {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-save:hover {
+            background: #357ABD;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4A90E2;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            background: #4CAF50;
+        }
+
+        .toast-error {
+            background: #ff6b6b;
+        }
+
+        .toast-icon {
+            font-size: 1.2rem;
+        }
+
+        .toast-close {
+            margin-left: 1rem;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo" data-tab="dashboard">
+                <i class="fas fa-cross"></i>
+                Believers
+            </a>
+            <nav class="header-nav">
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-tab="explore">
+                    <i class="fas fa-compass"></i> Explore
+                </a>
+                <a href="#" class="nav-item" data-tab="messages">
+                    <i class="fas fa-envelope"></i> Messages
+                    <span class="notification-badge">3</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="matches">
+                    <i class="fas fa-heart"></i> Matches
+                    <span class="notification-badge">7</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="profile">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+            </nav>
+            <div class="user-profile" id="profileDropdown">
+                <div class="profile-avatar">JD</div>
+                <div class="profile-dropdown" id="dropdownMenu">
+                    <a href="#" class="dropdown-item" data-tab="profile">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                    <a href="#" class="dropdown-item" data-tab="settings">
+                        <i class="fas fa-cog"></i> Settings
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="devotional-card">
+                <div class="devotional-header">
+                    <h3 class="devotional-title">Daily Devotional</h3>
+                    <div class="devotional-date">July 3, 2023</div>
+                </div>
+                <div class="devotional-verse">
+                    "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight." - Proverbs 3:5-6
+                </div>
+                <div class="devotional-text">
+                    Today's devotional reminds us to place our complete trust in God, especially when facing decisions about relationships. As you navigate this journey of finding a godly partner, remember that God knows the desires of your heart and has a perfect plan for your life.
+                </div>
+                <div class="devotional-prayer">
+                    Lord, guide me in my relationships and help me to trust in Your perfect timing. May I seek Your will above all else as I connect with others who share my faith.
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Profile Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">New Matches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Prayer Partners</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">New Matches</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </div>
+                    <div class="profile-suggestions">
+                        <div class="profile-card">
+                            <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                                <div class="match-percentage">92%</div>
+                                <div class="online-status"></div>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-name">Sarah M.</div>
+                                <div class="profile-details">28 • Christian • 5 miles away</div>
+                                <div class="profile-tags">
+                                    <span class="tag">Prayer</span>
+                                    <span class="tag">Worship</span>
+                                    <span class="tag">Bible Study</span>
+                                </div>
+                                <div class="profile-actions">
+                                    <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                                    <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                                <div class="match-percentage">87%</div>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-name">Rebecca L.</div>
+                                <div class="profile-details">26 • Catholic • 3 miles away</div>
+                                <div class="profile-tags">
+                                    <span class="tag">Bible Study</span>
+                                    <span class="tag">Volunteer</span>
+                                    <span class="tag">Missions</span>
+                                </div>
+                                <div class="profile-actions">
+                                    <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                                    <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activity</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">AM</div>
+                            <div>
+                                <div style="font-size: 0.9rem;"><strong>Anna M.</strong> liked your photo</div>
+                                <div style="font-size: 0.8rem; color: #666;">2 hours ago</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="message-avatar">GL</div>
+                            <div>
+                                <div style="font-size: 0.9rem;"><strong>Grace L.</strong> sent you a message</div>
+                                <div style="font-size: 0.8rem; color: #666;">5 hours ago</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="message-avatar">MK</div>
+                            <div>
+                                <div style="font-size: 0.9rem;"><strong>Mary K.</strong> viewed your profile</div>
+                                <div style="font-size: 0.8rem; color: #666;">1 day ago</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">ER</div>
+                            <div>
+                                <div style="font-size: 0.9rem;"><strong>Emily R.</strong> prayed for your request</div>
+                                <div style="font-size: 0.8rem; color: #666;">2 days ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Events</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="events-container">
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">15</div>
+                                <div class="event-month">Jul</div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Young Adults Bible Study</div>
+                                <div class="event-time">
+                                    <i class="fas fa-clock"></i> 7:00 PM - 8:30 PM
+                                </div>
+                                <div class="event-description">
+                                    Join us for a study on relationships from a biblical perspective. Open to singles ages 20-35.
+                                </div>
+                                <div class="event-actions">
+                                    <button class="action-btn btn-like" style="flex: none; padding: 0.4rem 0.8rem;">
+                                        <i class="fas fa-check"></i> RSVP
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">22</div>
+                                <div class="event-month">Jul</div>
+                            </div>
+                            <div class="event-details">
+                                <div class="event-title">Summer Worship Night</div>
+                                <div class="event-time">
+                                    <i class="fas fa-clock"></i> 6:30 PM - 9:00 PM
+                                </div>
+                                <div class="event-description">
+                                    Outdoor worship and fellowship at City Park. Bring a friend and a blanket!
+                                </div>
+                                <div class="event-actions">
+                                    <button class="action-btn btn-like" style="flex: none; padding: 0.4rem 0.8rem;">
+                                        <i class="fas fa-check"></i> RSVP
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Prayer Requests</h3>
+                        <div class="card-icon">
+                            <i class="fas fa-praying-hands"></i>
+                        </div>
+                    </div>
+                    <div class="prayer-requests">
+                        <div class="prayer-item">
+                            <div class="prayer-header">
+                                <div class="prayer-name">David T.</div>
+                                <div class="prayer-time">Yesterday</div>
+                            </div>
+                            <div class="prayer-text">
+                                Please pray for my job interview this Friday. I'm trusting God for His will in this opportunity.
+                            </div>
+                            <div class="prayer-actions">
+                                <button class="prayer-btn">
+                                    <i class="fas fa-hands-praying"></i> Prayed
+                                </button>
+                                <button class="prayer-btn">
+                                    <i class="fas fa-comment"></i> Reply
+                                </button>
+                            </div>
+                        </div>
+                        <div class="prayer-item">
+                            <div class="prayer-header">
+                                <div class="prayer-name">Sarah M.</div>
+                                <div class="prayer-time">2 days ago</div>
+                            </div>
+                            <div class="prayer-text">
+                                My grandmother is in the hospital. Prayers for healing and peace for our family would be appreciated.
+                            </div>
+                            <div class="prayer-actions">
+                                <button class="prayer-btn">
+                                    <i class="fas fa-hands-praying"></i> Prayed
+                                </button>
+                                <button class="prayer-btn">
+                                    <i class="fas fa-comment"></i> Reply
+                                </button>
+                            </div>
+                        </div>
+                        <div class="empty-state" style="padding: 1rem; text-align: left;">
+                            <button class="btn-primary" style="width: 100%;">
+                                <i class="fas fa-plus"></i> Add Prayer Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explore Tab -->
+        <div class="tab-content" id="explore">
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search by name, location, or interests...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Age Range</label>
+                        <select class="filter-select">
+                            <option>18-25</option>
+                            <option selected>26-35</option>
+                            <option>36-45</option>
+                            <option>46+</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Distance</label>
+                        <select class="filter-select">
+                            <option>Within 5 miles</option>
+                            <option selected>Within 10 miles</option>
+                            <option>Within 25 miles</option>
+                            <option>Within 50 miles</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Denomination</label>
+                        <select class="filter-select">
+                            <option>All</option>
+                            <option selected>Christian</option>
+                            <option>Catholic</option>
+                            <option>Protestant</option>
+                            <option>Orthodox</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Church Attendance</label>
+                        <select class="filter-select">
+                            <option selected>Weekly</option>
+                            <option>Monthly</option>
+                            <option>Occasionally</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-suggestions">
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">95%</div>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Emily R.</div>
+                        <div class="profile-details">29 • Christian • 2 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Worship Leader</span>
+                            <span class="tag">Youth Ministry</span>
+                            <span class="tag">Prayer</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">88%</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Hannah J.</div>
+                        <div class="profile-details">31 • Catholic • 4 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Mission Work</span>
+                            <span class="tag">Community Service</span>
+                            <span class="tag">Bible Study</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">91%</div>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Rachel S.</div>
+                        <div class="profile-details">27 • Christian • 6 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Bible Study</span>
+                            <span class="tag">Prayer Group</span>
+                            <span class="tag">Worship</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">85%</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Abigail T.</div>
+                        <div class="profile-details">25 • Protestant • 8 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Choir</span>
+                            <span class="tag">Children's Ministry</span>
+                            <span class="tag">Volunteer</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">82%</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Grace L.</div>
+                        <div class="profile-details">30 • Christian • 5 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Prayer</span>
+                            <span class="tag">Bible Study</span>
+                            <span class="tag">Missions</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">89%</div>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Bethany K.</div>
+                        <div class="profile-details">28 • Christian • 7 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Worship</span>
+                            <span class="tag">Youth Leader</span>
+                            <span class="tag">Volunteer</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn-primary" style="padding: 0.8rem 2rem;">
+                    <i class="fas fa-sync-alt"></i> Load More Profiles
+                </button>
+            </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div class="tab-content" id="messages">
+            <div class="messages-container">
+                <div class="message-list">
+                    <div class="message-item active">
+                        <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">GL</div>
+                        <div class="message-preview">
+                            <div class="message-name">Grace L.</div>
+                            <div class="message-text">Thanks for the prayer request! I'll keep you in my prayers 🙏</div>
+                        </div>
+                        <div class="message-time">2h</div>
+                    </div>
+                    <div class="message-item">
+                        <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">SM</div>
+                        <div class="message-preview">
+                            <div class="message-name">Sarah M.</div>
+                            <div class="message-text">I'd love to attend that Bible study with you!</div>
+                        </div>
+                        <div class="message-time">5h</div>
+                    </div>
+                    <div class="message-item">
+                        <div class="message-avatar">RL</div>
+                        <div class="message-preview">
+                            <div class="message-name">Rebecca L.</div>
+                            <div class="message-text">Your testimony was so inspiring! Thank you for sharing.</div>
+                        </div>
+                        <div class="message-time">1d</div>
+                    </div>
+                    <div class="message-item">
+                        <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">ER</div>
+                        <div class="message-preview">
+                            <div class="message-name">Emily R.</div>
+                            <div class="message-text">Hope you have a blessed day! 😊</div>
+                        </div>
+                        <div class="message-time">2d</div>
+                    </div>
+                    <div class="message-item">
+                        <div class="message-avatar">HJ</div>
+                        <div class="message-preview">
+                            <div class="message-name">Hannah J.</div>
+                            <div class="message-text">Let me know if you'd like to join our volunteer group this weekend</div>
+                        </div>
+                        <div class="message-time">3d</div>
+                    </div>
+                </div>
+                <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="message-avatar" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">GL</div>
+                        <div>
+                            <div class="message-name">Grace L.</div>
+                            <div class="message-text" style="color: #4CAF50; font-size: 0.8rem;">
+                                <i class="fas fa-circle" style="font-size: 0.5rem;"></i> Online
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message-bubble message-received">
+                            Hi John! I saw your prayer request about your job interview. I'll be praying for you!
+                            <div class="message-time-stamp">10:30 AM</div>
+                        </div>
+                        <div class="message-bubble message-sent">
+                            Thank you so much, Grace! I really appreciate it. I've been feeling nervous but trying to trust God's plan.
+                            <div class="message-time-stamp">10:32 AM</div>
+                        </div>
+                        <div class="message-bubble message-received">
+                            That's the best thing we can do - trust Him. Jeremiah 29:11 has been encouraging me lately: "For I know the plans I have for you..."
+                            <div class="message-time-stamp">10:33 AM</div>
+                        </div>
+                        <div class="message-bubble message-sent">
+                            That's one of my favorite verses! It's amazing how God reminds us of His promises when we need them most.
+                            <div class="message-time-stamp">10:35 AM</div>
+                        </div>
+                        <div class="message-bubble message-received">
+                            Absolutely! Let me know how the interview goes. Praying for peace and wisdom for you 🙏
+                            <div class="message-time-stamp">10:36 AM</div>
+                        </div>
+                    </div>
+                    <div class="message-input-area">
+                        <textarea class="message-input" placeholder="Type your message..."></textarea>
+                        <button class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matches Tab -->
+        <div class="tab-content" id="matches">
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search your matches...">
+                    <button class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select class="filter-select">
+                            <option>Newest First</option>
+                            <option selected>Highest Match %</option>
+                            <option>Recently Active</option>
+                            <option>Distance</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Match Percentage</label>
+                        <select class="filter-select">
+                            <option>All Matches</option>
+                            <option selected>90% or higher</option>
+                            <option>80% or higher</option>
+                            <option>70% or higher</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-suggestions">
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">92%</div>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Sarah M.</div>
+                        <div class="profile-details">28 • Christian • 5 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Prayer</span>
+                            <span class="tag">Worship</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">87%</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Rebecca L.</div>
+                        <div class="profile-details">26 • Catholic • 3 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Bible Study</span>
+                            <span class="tag">Volunteer</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">95%</div>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Emily R.</div>
+                        <div class="profile-details">29 • Christian • 2 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Worship Leader</span>
+                            <span class="tag">Youth Ministry</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-image" style="background-image: url('https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">
+                        <div class="match-percentage">88%</div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name">Hannah J.</div>
+                        <div class="profile-details">31 • Catholic • 4 miles away</div>
+                        <div class="profile-tags">
+                            <span class="tag">Mission Work</span>
+                            <span class="tag">Community Service</span>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="action-btn btn-like"><i class="fas fa-heart"></i> Like</button>
+                            <button class="action-btn btn-message"><i class="fas fa-comment"></i> Message</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <div class="profile-avatar-large" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')">JD</div>
+                    <div class="profile-info-large">
+                        <h1 class="profile-name-large">John D.</h1>
+                        <div class="profile-details-large">30 • Christian • Worship Leader • 5 miles away</div>
+                        <div class="profile-bio">
+                            Passionate about worship and serving in my local church. I lead the young adults worship team and enjoy helping others grow in their faith. Looking for someone who shares my love for God and desire to serve.
+                        </div>
+                        <div class="profile-actions-large">
+                            <button class="btn-primary">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                            <button class="btn-secondary">
+                                <i class="fas fa-eye"></i> View Public Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-number">87%</div>
+                        <div class="profile-stat-label">Avg. Match</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number">156</div>
+                        <div class="profile-stat-label">Profile Views</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-number">23</div>
+                        <div class="profile-stat-label">Matches</div>
+                    </div>
+                </div>
+
+                <div class="faith-details">
+                    <h3 class="section-title">
+                        <i class="fas fa-cross"></i> Faith Details
+                    </h3>
+                    <div class="faith-details-grid">
+                        <div class="faith-detail">
+                            <div class="faith-label">Denomination</div>
+                            <div class="faith-value">Christian - Non-denominational</div>
+                        </div>
+                        <div class="faith-detail">
+                            <div class="faith-label">Church Attendance</div>
+                            <div class="faith-value">Weekly</div>
+                        </div>
+                        <div class="faith-detail">
+                            <div class="faith-label">Bible Version</div>
+                            <div class="faith-value">ESV</div>
+                        </div>
+                        <div class="faith-detail">
+                            <div class="faith-label">Spiritual Gifts</div>
+                            <div class="faith-value">Worship, Teaching, Encouragement</div>
+                        </div>
+                        <div class="faith-detail">
+                            <div class="faith-label">Ministry Involvement</div>
+                            <div class="faith-value">Worship Team, Young Adults Leader</div>
+                        </div>
+                        <div class="faith-detail">
+                            <div class="faith-label">Prayer Habits</div>
+                            <div class="faith-value">Daily personal prayer, Weekly prayer group</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-images"></i> Photos
+                    </h3>
+                    <div class="gallery">
+                        <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')"></div>
+                        <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1480429370139-e0132c086e2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')"></div>
+                        <div class="gallery-item" style="background-image: url('https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60')"></div>
+                        <div class="gallery-item add-photo">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-heart"></i> What I'm Looking For
+                    </h3>
+                    <div class="faith-details">
+                        <p style="margin-bottom: 1rem;">I'm looking for a woman who has a genuine relationship with Christ and is actively growing in her faith. Someone who values worship, prayer, and serving others. It's important to me that we can encourage each other spiritually and share similar values.</p>
+                        <div class="faith-details-grid">
+                            <div class="faith-detail">
+                                <div class="faith-label">Denomination Preference</div>
+                                <div class="faith-value">Christian or Catholic</div>
+                            </div>
+                            <div class="faith-detail">
+                                <div class="faith-label">Church Attendance</div>
+                                <div class="faith-value">Weekly or more</div>
+                            </div>
+                            <div class="faith-detail">
+                                <div class="faith-label">Important Values</div>
+                                <div class="faith-value">Faith, Family, Service</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-music"></i> Interests
+                    </h3>
+                    <div class="profile-tags" style="margin-bottom: 0;">
+                        <span class="tag">Worship Music</span>
+                        <span class="tag">Bible Study</span>
+                        <span class="tag">Hiking</span>
+                        <span class="tag">Coffee</span>
+                        <span class="tag">Reading</span>
+                        <span class="tag">Volunteering</span>
+                        <span class="tag">Songwriting</span>
+                        <span class="tag">Travel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="settings-container">
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <i class="fas fa-user-cog"></i> Account Settings
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" value="john.doe@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" value="********">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" value="(555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <i class="fas fa-bell"></i> Notification Preferences
+                    </h3>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="notif1" checked>
+                        <label class="form-check-label" for="notif1">New matches</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="notif2" checked>
+                        <label class="form-check-label" for="notif2">Messages</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="notif3" checked>
+                        <label class="form-check-label" for="notif3">Prayer requests</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="notif4">
+                        <label class="form-check-label" for="notif4">Promotional offers</label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="settings-title">
+                        <i class="fas fa-lock"></i> Privacy Settings
+                    </h3>
+                    <div class="form-group">
+                        <label class="form-label">Profile Visibility</label>
+                        <select class="form-select">
+                            <option selected>Visible to all members</option>
+                            <option>Visible to matches only</option>
+                            <option>Hidden from search</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location Visibility</label>
+                        <select class="form-select">
+                            <option selected>Show approximate distance</option>
+                            <option>Show city only</option>
+                            <option>Hide location</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="btn-cancel">
+                        Cancel
+                    </button>
+                    <button class="btn-save">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-message">Changes saved successfully!</div>
+        <div class="toast-close">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.nav-item, .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                if (this.classList.contains('nav-item')) {
+                    this.classList.add('active');
+                }
+                
+                // Show selected tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Profile dropdown toggle
+        document.getElementById('profileDropdown').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('dropdownMenu').classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+        });
+
+        // Like button functionality
+        document.querySelectorAll('.btn-like').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.innerHTML = '<i class="fas fa-check"></i> Liked';
+                this.style.background = '#4CAF50';
+                
+                // Show toast notification
+                const toast = document.getElementById('toast');
+                toast.classList.add('toast-success');
+                toast.querySelector('.toast-message').textContent = 'Profile liked!';
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            });
+        });
+
+        // Message button functionality
+        document.querySelectorAll('.btn-message').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // Switch to messages tab and select this user
+                document.querySelector('[data-tab="messages"]').click();
+                
+                // Show toast notification
+                const toast = document.getElementById('toast');
+                toast.classList.add('toast-success');
+                toast.querySelector('.toast-message').textContent = 'Ready to message!';
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            });
+        });
+
+        // Close toast notification
+        document.querySelector('.toast-close').addEventListener('click', function() {
+            document.getElementById('toast').classList.remove('show');
+        });
+
+        // Message item click functionality
+        document.querySelectorAll('.message-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.message-item').forEach(msg => {
+                    msg.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // On mobile, switch to chat view
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.message-list').classList.add('mobile-hidden');
+                    document.querySelector('.chat-area').classList.add('mobile-show');
+                }
+            });
+        });
+
+        // Back button functionality for mobile chat
+        document.querySelector('.chat-header').addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.message-list').classList.remove('mobile-hidden');
+                document.querySelector('.chat-area').classList.remove('mobile-show');
+            }
+        });
+
+        // Send message functionality
+        document.querySelector('.send-btn').addEventListener('click', function() {
+            const input = document.querySelector('.message-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                const chatArea = document.querySelector('.chat-messages');
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message-bubble message-sent';
+                newMessage.innerHTML = `
+                    ${message}
+                    <div class="message-time-stamp">${timeString}</div>
+                `;
+                
+                chatArea.appendChild(newMessage);
+                input.value = '';
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        });
+
+        // Allow sending message with Enter key
+        document.querySelector('.message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.querySelector('.send-btn').click();
+            }
+        });
+
+        // Save settings functionality
+        document.querySelector('.btn-save').addEventListener('click', function() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('toast-success');
+            toast.querySelector('.toast-message').textContent = 'Settings saved successfully!';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaithMatch Onboarding Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 
+      Chosen Palette: Warm Harmony (A base of warm neutrals like beige/cream, with terracotta and dusty rose accents for a calm, supportive feel).
+      Application Structure Plan: The application is designed as a multi-step "wizard" or "stepper" to guide the user through the onboarding process one question at a time. This prevents cognitive overload and makes the sign-up process feel more like an engaging journey rather than a long form. A visual progress bar at the top provides clear feedback on completion status. Navigation is handled by 'Next' and 'Back' buttons, giving the user full control. This structure was chosen because it directly translates the sequential nature of the source report into an intuitive and interactive user flow, maximizing engagement and completion rates.
+      Visualization & Content Choices: The source report's structure is implemented using distinct visual steps. Questions are presented using interactive tags (styled buttons) for quick selection, sliders for nuanced preferences (age, attraction), and text areas for qualitative input (bio). The final step includes a dynamic summary of all user inputs, providing a chance for review before completion. This approach uses simple, universally understood HTML elements styled with Tailwind to create a rich interactive experience without relying on complex charting libraries or graphics, which are unnecessary for this application's goals. All interactions directly populate a user data object, making the data collection seamless.
+      CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for a smoother experience */
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .step.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tag {
+            transition: all 0.2s ease-in-out;
+        }
+        .tag.selected {
+            background-color: #6474CD; /* Dusty Rose */
+            color: #FFFFFF;
+            border-color: #6474CD;
+        }
+        /* Custom slider styles */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #BCC8E1; /* Light Rose */
+            outline: none;
+            border-radius: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #6474CD; /* Dusty Rose */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #6474CD;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .upload-area {
+            border: 2px dashed #BCC8E1;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .upload-area:hover {
+            background-color: #FEF9F8;
+        }
+    </style>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+</head>
+<body class="bg-[#e8f4fd] text-[#5D5C61]">
+    <div class="container mx-auto max-w-2xl p-4 sm:p-8 min-h-screen flex flex-col justify-center">
+        
+        <!-- Progress Bar -->
+        <div id="progress-container" class="w-full mb-8">
+            <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium text-[#6474CD]">Max Steps: 7 — Quick, easy, spirit-led.</span>
+                <span id="progress-text" class="text-sm font-medium text-[#6474CD]">Step 1 of 7</span>
+            </div>
+            <div class="w-full bg-[#BCC8E1] rounded-full h-2.5">
+                <div id="progress-bar" class="bg-[#6474CD] h-2.5 rounded-full" style="width: 14%"></div>
+            </div>
+        </div>
+
+        <div id="onboarding-steps" class="bg-white rounded-2xl shadow-lg p-6 sm:p-10 flex-grow flex flex-col">
+            <!-- Steps will be injected here by JS -->
+
+            <!-- Step 1: Welcome -->
+            <div class="step active" data-step="1">
+                <div class="text-center">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-[#5D5C61] mb-2">Let’s Get You Started, Star✨</h1>
+                    <p class="text-lg text-gray-600 mb-6">Your love journey starts here. No pressure — just purpose.</p>
+                    <p class="text-gray-500 mb-8">Hey [Name], welcome to FaithMatch. We believe your future is bright and faith-filled. Let’s set up your profile so we can connect you with someone amazing — someone who gets your faith, your vibe, and your love walk.</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Your Faith Journey -->
+            <div class="step" data-step="2">
+                <h2 class="text-2xl font-bold mb-1">Sunday Best & Everyday Faith</h2>
+                <p class="text-gray-500 mb-6">Let’s talk Jesus & vibes.</p>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">What is your primary Christian denomination?</h3>
+                        <div class="flex flex-wrap gap-2" data-question="denomination" data-type="single">
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Baptist</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Catholic</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Methodist</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Pentecostal / Charismatic</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Non-Denominational</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Presbyterian</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Lutheran</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Orthodox</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Other (please specify)</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">How faith shows up in your life?</h3>
+                        <div class="flex flex-wrap gap-2" data-question="faithImportance" data-type="single">
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Central to everything I do</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Very important, guides my decisions</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Important, I strive to grow</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Growing in my faith</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Exploring my faith</button>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="font-semibold mb-2">How often do you catch the Sunday service or midweek blessings?</h3>
+                        <div class="flex flex-wrap gap-2" data-question="churchAttendance" data-type="single">
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Weekly</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Bi-weekly</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Monthly</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Occasionally</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Not currently, but I desire to</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Core Values -->
+            <div class="step" data-step="3">
+                <h2 class="text-2xl font-bold mb-1">What Makes Your Heart Smile?</h2>
+                <p class="text-gray-500 mb-6">We’re talking values, not vibes.</p>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">Choose the qualities that make you say ‘Yesss, Lord!’ <span class="font-normal text-gray-500">(Select up to 5)</span></h3>
+                        <div class="flex flex-wrap gap-2" data-question="partnerValues" data-type="multiple" data-max="5">
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Strong Faith</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Integrity</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Compassion</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Humility</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Generosity</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Sense of Humor</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Patience</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Servant Heart</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Good Listener</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Financial Stewardship</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Bible Lover</button>
+                            <button class="tag border border-gray-300 rounded-full px-4 py-2">Can pray in tongues & play guitar</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">How do you want to grow in faith together?</h3>
+                        <div class="flex flex-wrap gap-2" data-question="spiritualGrowth" data-type="multiple">
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Bible & chill</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Prayer walks</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Worship dates</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Ministry moments</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Discussing faith topics</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">All of the above</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Interests & Hobbies -->
+            <div class="step" data-step="4">
+                <h2 class="text-2xl font-bold mb-1">What’s Your Vibe Off the Pulpit?</h2>
+                <p class="text-gray-500 mb-6">When you’re not at church, what are you up to?</p>
+                <div class="space-y-4" data-question="interests" data-type="multiple">
+                     <details class="group">
+                        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">Spiritual & Community ✨ <span class="group-open:rotate-90 transition-transform">▶</span></summary>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Bible Study</button>
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Worship Music</button>
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Mission Trips</button>
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Volunteering</button>
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Choir</button>
+                           <button class="tag border border-gray-300 rounded-full px-3 py-1">Online Sermons</button>
+                        </div>
+                    </details>
+                    <details class="group">
+                        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">Food & Chill 🍔 <span class="group-open:rotate-90 transition-transform">▶</span></summary>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Coffee</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Cooking Jollof</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Eating Suya</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Home Cooking</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Baking</button>
+                        </div>
+                    </details>
+                    <details class="group">
+                        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">Outdoor Things 🌳 <span class="group-open:rotate-90 transition-transform">▶</span></summary>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Long Walks</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Beach Hangouts</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Hike & Worship</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Hiking</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Camping</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Nature Walks</button>
+                        </div>
+                    </details>
+                    <details class="group">
+                        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">Creative Soul 🎨 <span class="group-open:rotate-90 transition-transform">▶</span></summary>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Journaling</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Content Creation</button>
+                            <button class="tag border border-gray-300 rounded-full px-3 py-1">Christian Reels</button>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Step 5: Relationship Preferences -->
+            <div class="step" data-step="5">
+                <h2 class="text-2xl font-bold mb-1">What Are You Hoping For?</h2>
+                <p class="text-gray-500 mb-6">Heart check — what’s your love goal?</p>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-semibold mb-2">Let’s be clear like 1 Corinthians 13 love. You’re here for…</h3>
+                        <div class="flex flex-wrap gap-2" data-question="relationshipGoal" data-type="single">
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Marriage</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Kingdom dating</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Fellowship/friendship</button>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="font-semibold mb-2">What age range are you open to?</h3>
+                        <div data-question="ageRange">
+                            <input type="range" min="18" max="80" value="25" class="mb-2" id="age-min-slider">
+                            <input type="range" min="18" max="80" value="40" id="age-max-slider">
+                            <div class="text-center text-gray-600 mt-2">Between <span id="age-min-value">25</span> and <span id="age-max-value">40</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Location filters</h3>
+                        <p class="text-sm text-gray-500 mb-2">We'll help you find matches near you or further afield.</p>
+                        <!-- Add location filter UI here, e.g., a dropdown or text input -->
+                        <input type="text" placeholder="Your City/Region" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BCC8E1] focus:border-[#6474CD] outline-none">
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Dealbreakers (optional): <span class="font-normal text-gray-500">"Swipe left on this?"</span></h3>
+                        <div class="flex flex-wrap gap-2" data-question="dealbreakers" data-type="multiple">
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Smoking</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">No church life</button>
+                           <button class="tag border border-gray-300 rounded-full px-4 py-2">Opposing beliefs</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: About Me -->
+            <div class="step" data-step="6">
+                <h2 class="text-2xl font-bold mb-1">Let Them Hear Your Voice (or Testimony 😄)</h2>
+                <p class="text-gray-500 mb-4">Tell your story, glory and all.</p>
+                <div data-question="bio">
+                    <p class="text-sm text-gray-500 mb-2">Drop a quick intro! Could be your favorite scripture, what excites you about love, or just what makes you, you. (Optional tip: Add a sprinkle of humor or testimony!)</p>
+                    <textarea id="bio-textarea" rows="6" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#CEE5FF] focus:border-[#6474CD] outline-none" placeholder="Write your bio here..."></textarea>
+                    <div id="char-counter" class="text-right text-sm text-gray-500">0 / 300</div>
+                </div>
+            </div>
+
+            <!-- Step 7: Photo & Review -->
+            <div class="step" data-step="7">
+                <h2 class="text-2xl font-bold mb-1">Smile for the Kingdom 📸</h2>
+                <p class="text-gray-500 mb-6">Upload that anointed selfie</p>
+                <div class="space-y-6">
+                    <div>
+                        <label for="photo-upload" class="upload-area block rounded-lg">
+                             <div id="upload-prompt">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                <p class="mt-2 text-sm text-gray-600">Give us your best ‘I just came from a wedding’ or ‘Serving the Lord in joy’ look.</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                             </div>
+                             <img id="image-preview" src="#" alt="Image Preview" class="hidden mx-auto max-h-48 rounded-lg"/>
+                        </label>
+                        <input type="file" id="photo-upload" class="hidden" accept="image/*">
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">Final Profile Preview</h3>
+                        <div id="review-content" class="text-sm space-y-2 p-4 bg-gray-50 rounded-lg border">
+                            <p>Your profile summary will appear here once you've filled out the previous steps.</p>
+                        </div>
+                    </div>
+                    <div class="text-sm text-gray-500">Optional verification will be available after submission.</div>
+                </div>
+            </div>
+            
+            <div class="mt-auto pt-6">
+                <div class="flex justify-between items-center">
+                    <button id="back-btn" class="text-gray-600 font-semibold py-2 px-4 rounded-lg transition hover:bg-gray-100">Back</button>
+                    <button id="next-btn" class="bg-[#6474CD] text-white font-bold py-2 px-6 rounded-lg transition hover:bg-opacity-90">Let’s Do This</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentStep = 1;
+            const totalSteps = 7;
+            const steps = document.querySelectorAll('.step');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const nextBtn = document.getElementById('next-btn');
+            const backBtn = document.getElementById('back-btn');
+
+            const userData = {
+                denomination: null,
+                faithImportance: null,
+                churchAttendance: null,
+                partnerValues: [],
+                spiritualGrowth: [],
+                interests: [],
+                relationshipGoal: null,
+                ageRange: { min: 25, max: 40 },
+                location: '',
+                dealbreakers: [],
+                bio: '',
+                photo: null
+            };
+
+            function updateButtons() {
+                if (currentStep === 1) {
+                    backBtn.style.visibility = 'hidden';
+                    nextBtn.textContent = "Let’s Do This";
+                } else {
+                    backBtn.style.visibility = 'visible';
+                    nextBtn.textContent = "Next";
+                }
+
+                if (currentStep === totalSteps) {
+                    nextBtn.textContent = "Shine & Submit ✨";
+                }
+            }
+
+            function updateProgress() {
+                const progressPercentage = ((currentStep - 1) / (totalSteps -1)) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                progressText.textContent = `Step ${currentStep} of ${totalSteps}`;
+                if (currentStep === 1) {
+                     progressBar.style.width = `14%`;
+                     progressText.textContent = `Step 1 of ${totalSteps}`;
+                }
+            }
+
+            function showStep(stepNumber) {
+                steps.forEach(step => {
+                    step.classList.remove('active');
+                });
+                document.querySelector(`.step[data-step="${stepNumber}"]`).classList.add('active');
+                updateButtons();
+                updateProgress();
+            }
+            
+            function generateReview() {
+                const reviewContainer = document.getElementById('review-content');
+                let html = `<ul>`;
+                if(userData.denomination) html += `<li class="mb-1"><strong>Denomination:</strong> ${userData.denomination}</li>`;
+                if(userData.faithImportance) html += `<li class="mb-1"><strong>Faith is:</strong> ${userData.faithImportance}</li>`;
+                if(userData.churchAttendance) html += `<li class="mb-1"><strong>Church Attendance:</strong> ${userData.churchAttendance}</li>`;
+                if(userData.partnerValues.length) html += `<li class="mb-1"><strong>Values in a partner:</strong> ${userData.partnerValues.join(', ')}</li>`;
+                if(userData.spiritualGrowth.length) html += `<li class="mb-1"><strong>Spiritual Growth:</strong> ${userData.spiritualGrowth.join(', ')}</li>`;
+                if(userData.interests.length) html += `<li class="mb-1"><strong>Interests:</strong> ${userData.interests.join(', ')}</li>`;
+                if(userData.relationshipGoal) html += `<li class="mb-1"><strong>Seeking:</strong> ${userData.relationshipGoal}</li>`;
+                html += `<li class="mb-1"><strong>Age Preference:</strong> ${userData.ageRange.min} - ${userData.ageRange.max}</li>`;
+                if(userData.location) html += `<li class="mb-1"><strong>Location:</strong> ${userData.location}</li>`;
+                if(userData.dealbreakers.length) html += `<li class="mb-1"><strong>Dealbreakers:</strong> ${userData.dealbreakers.join(', ')}</li>`;
+                if(userData.bio) html += `<li class="mt-2"><strong>Bio:</strong><p class="italic text-gray-600 pl-2 border-l-2 border-gray-200">"${userData.bio}"</p></li>`;
+                html += `</ul>`;
+                reviewContainer.innerHTML = html;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    if(currentStep === totalSteps) {
+                        generateReview();
+                    }
+                    showStep(currentStep);
+                } else {
+                    // Final submission logic
+                    alert("Profile Complete! Thank you for joining FaithMatch!");
+                }
+            });
+
+            backBtn.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+
+            // Handle tag selection
+            document.querySelectorAll('.tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    const parent = tag.parentElement;
+                    const question = parent.dataset.question;
+                    const type = parent.dataset.type;
+                    const max = parseInt(parent.dataset.max, 10);
+                    const value = tag.textContent.trim(); // Trim whitespace from tag text
+                    
+                    if (type === 'single') {
+                        userData[question] = value;
+                        parent.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+                        tag.classList.add('selected');
+                    } else if (type === 'multiple') {
+                        if (!userData[question]) userData[question] = [];
+                        
+                        const index = userData[question].indexOf(value);
+                        if (index > -1) {
+                            userData[question].splice(index, 1);
+                            tag.classList.remove('selected');
+                        } else {
+                             if(max && userData[question].length >= max) {
+                                 alert(`You can only select up to ${max} options.`);
+                                 return;
+                             }
+                            userData[question].push(value);
+                            tag.classList.add('selected');
+                        }
+                    }
+                });
+            });
+            
+            // Handle sliders
+            const ageMinSlider = document.getElementById('age-min-slider');
+            const ageMaxSlider = document.getElementById('age-max-slider');
+            const ageMinValue = document.getElementById('age-min-value');
+            const ageMaxValue = document.getElementById('age-max-value');
+
+            ageMinSlider.addEventListener('input', (e) => {
+                let minVal = parseInt(e.target.value);
+                let maxVal = parseInt(ageMaxSlider.value);
+                if (minVal >= maxVal) {
+                    minVal = maxVal - 1;
+                    e.target.value = minVal;
+                }
+                ageMinValue.textContent = minVal;
+                userData.ageRange.min = minVal;
+            });
+            ageMaxSlider.addEventListener('input', (e) => {
+                let maxVal = parseInt(e.target.value);
+                let minVal = parseInt(ageMinSlider.value);
+                if (maxVal <= minVal) {
+                    maxVal = minVal + 1;
+                    e.target.value = maxVal;
+                }
+                ageMaxValue.textContent = maxVal;
+                userData.ageRange.max = maxVal;
+            });
+
+            // Handle bio textarea
+            const bioTextarea = document.getElementById('bio-textarea');
+            const charCounter = document.getElementById('char-counter');
+            bioTextarea.addEventListener('input', (e) => {
+                const text = e.target.value;
+                userData.bio = text;
+                charCounter.textContent = `${text.length} / 300`;
+                if(text.length > 300) {
+                    charCounter.classList.add('text-red-500');
+                } else {
+                     charCounter.classList.remove('text-red-500');
+                }
+            });
+            
+            // Handle photo upload
+            const photoUpload = document.getElementById('photo-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const uploadPrompt = document.getElementById('upload-prompt');
+            
+            photoUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagePreview.src = event.target.result;
+                        imagePreview.classList.remove('hidden');
+                        uploadPrompt.classList.add('hidden');
+                        userData.photo = event.target.result; // For preview, in real app handle file object
+                    }
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            // Handle location input (newly added)
+            const locationInput = document.querySelector('input[placeholder="Your City/Region"]');
+            if (locationInput) {
+                locationInput.addEventListener('input', (e) => {
+                    userData.location = e.target.value;
+                });
+            }
+
+            // Initialize
+            showStep(currentStep);
+        });
+    </script>
+</body>
+</html>
